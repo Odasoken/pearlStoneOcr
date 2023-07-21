@@ -1,6 +1,6 @@
 
 # pyChineseOcrTesT -  tesseract中文ocr识别测试
-^^^^objc
+```python
 import pytesseract
 from PIL import Image
 import numpy as np
@@ -61,3 +61,4 @@ while True:
     else:
         print("图片不存在",url)
         continue
+```
