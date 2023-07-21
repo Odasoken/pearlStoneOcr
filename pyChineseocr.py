@@ -21,10 +21,10 @@ def pyChineseocr(url):
         return "null"
     finally:
         # 转换成灰度图像
-        img_gray = img.convert('L')
+        img_grey = img.convert('L')
 
         # 转换成numpy数组
-        img_arr = np.array(img_gray)
+        img_arr = np.array(img_grey)
 
         # 设置阈值将图片二值化
         threshold = np.mean(img_arr) * 0.65
