@@ -1,7 +1,8 @@
 
 # pyChineseOcrTesT -  tesseract中文ocr识别测试
  <img src="https://github.com/Odasoken/pyChineseOcrTest/blob/main/demo.jpg" width="50%" height="50%">
-#Code
+
+# Code
 ```python
 import pytesseract
 from PIL import Image
