@@ -33,6 +33,7 @@ MainWindow::~MainWindow()
 void MainWindow::refreshImage(QString filePath)
 {
     QImage *img =  new QImage(filePath);
+    if(img->isNull()) return;
     int ori_width = img->size().width();
     int ori_height =  img->size().height();
 
@@ -108,6 +109,10 @@ void MainWindow::on_regnizeButton_clicked()
 {
      ui->tipsLabel->setText("");
      QString fileUrl =  ui->lineEdit->text();
+     if(fileUrl.isNull() || fileUrl.isEmpty() || fileUrl.length() == 0)
+     {
+         return;
+     }
      recognizeImage(fileUrl);
 }
 
