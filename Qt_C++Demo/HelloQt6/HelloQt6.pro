@@ -16,7 +16,7 @@ HEADERS += \
     mainwindow.h
 
 
-
+ICON = logo.icns
 
 
 
@@ -44,3 +44,9 @@ macx: LIBS += -L$$PWD/tesseract/ -ltesseract.5
 
 INCLUDEPATH += $$PWD/tesseract
 DEPENDPATH += $$PWD/tesseract
+
+DISTFILES += \
+    tessdata/chi_sim.traineddata
+
+RESOURCES += \
+    ress.qrc

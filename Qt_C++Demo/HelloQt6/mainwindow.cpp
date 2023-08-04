@@ -65,9 +65,15 @@ void MainWindow::recognizeImage(QString filePath){
 
 //
      tesseract::TessBaseAPI *api = new tesseract::TessBaseAPI();
-     // Initialize tesseract-ocr with lang, without specifying tessdata path
-     if (api->Init(NULL, "chi_sim"))
+     // Initialize tesseract-ocr with lang, with specifying tessdata path
+     QString dataPath = QApplication::applicationDirPath() + "/../resources/tessdata";
+     qDebug()<< dataPath;
+     std::string str = dataPath.toStdString();
+     const char *dataStr = str.c_str();
+     qDebug()<< dataStr;
+     if (api->Init(dataStr, "chi_sim"))
      {
+         showMessage("Could not initialize tesseract.");
          qDebug()<< "Could not initialize tesseract.\n";
          return;
      }
@@ -79,6 +85,7 @@ void MainWindow::recognizeImage(QString filePath){
      QString trText =  QString(outText);
      ui->textEdit->setText(trText);
      qDebug()<<outText;
+     api->End();
 
 
 }
@@ -96,7 +103,7 @@ void MainWindow::showMessage(QString msg){
 void MainWindow::on_selectButton_clicked()
 {
     QString filePath;
-    filePath = QFileDialog::getOpenFileName(this,"Select Image","~/doucuments","Image Types(*.png *.jpg *.bmp *.jpeg)");
+    filePath = QFileDialog::getOpenFileName(this,"Select Image","~/documents","Image Types(*.png *.jpg *.bmp *.jpeg)");
     qDebug() << filePath;
 
     ui->lineEdit->setText(filePath);
