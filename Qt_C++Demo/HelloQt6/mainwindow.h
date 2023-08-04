@@ -22,12 +22,20 @@ private slots:
 
     void on_copyButton_clicked();
 
+    void on_comboBox_currentIndexChanged(int index);
+
 private:
     Ui::MainWindow *ui;
     QString fileUrl;
+    QString otherLangPath;
+    QString langDir;
+    QString langName;
+    int langIndx = 0;
 
     void refreshImage(QString filePath);
     void recognizeImage(QString filePath);
     void showMessage(QString msg);
+    void selectOtherLanguges();
+    void refreshLangugePath(QString path);
 };
 #endif // MAINWINDOW_H

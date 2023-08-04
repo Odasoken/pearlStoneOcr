@@ -8,6 +8,8 @@
 #include <QThread>
 #include <tesseract/baseapi.h>
 #include <leptonica/allheaders.h>
+#include <QSettings>
+
 //Tesseract
 
 
@@ -22,6 +24,27 @@ MainWindow::MainWindow(QWidget *parent)
      //UI settings
      ui->lineEdit->setPlaceholderText("Please Input Image path");
      ui->textEdit->setPlaceholderText("Recognized Text");
+     QStringList strList;
+     strList<<"中文"<<"한국어"<<"Other";
+     ui->comboBox->addItems(strList);
+
+    //Load settings
+      QSettings settings("xtres_languages", "otresApp");
+      int idtx = settings.value("xt_lang_key").toInt();
+      if(idtx > 0)
+      {
+         langIndx = idtx;
+         if(idtx == 2)
+         {
+
+             QStringList list = settings.value("xt_other_lang_path").toStringList();
+            QString lastpath =  list.first();
+            refreshLangugePath(lastpath);
+
+         }
+      }
+     ui->comboBox->setCurrentIndex(langIndx);
+
 
 }
 
@@ -58,6 +81,13 @@ void MainWindow::refreshImage(QString filePath)
 /* recognize image*/
 void MainWindow::recognizeImage(QString filePath){
     qDebug() << filePath;
+    if(langIndx == 2 && (otherLangPath.isNull() || otherLangPath.length() <= 0))
+    {
+        selectOtherLanguges();
+        return;
+    }
+
+
      QImage *img =  new QImage(filePath);
      QImage grayImage = img->convertToFormat(QImage::Format_Grayscale8);
      QImage tresholdImage = Binaryzation(grayImage);
@@ -70,8 +100,24 @@ void MainWindow::recognizeImage(QString filePath){
      qDebug()<< dataPath;
      std::string str = dataPath.toStdString();
      const char *dataStr = str.c_str();
-     qDebug()<< dataStr;
-     if (api->Init(dataStr, "chi_sim"))
+     qDebug()<< dataStr;//+ kor
+     const char *langStr =  "chi_sim";
+     if(langIndx == 1)
+     {
+         langStr =  "kor";
+     }
+     else if(langIndx == 2)
+     {
+        str = langDir.toStdString();
+        dataStr = str.c_str();
+
+        std::string str2 = langName.toStdString();
+        langStr = str2.c_str();
+
+        qDebug()<<"hello"<<langDir<<langName;
+
+     }
+     if (api->Init(dataStr, langStr))
      {
          showMessage("Could not initialize tesseract.");
          qDebug()<< "Could not initialize tesseract.\n";
@@ -90,7 +136,37 @@ void MainWindow::recognizeImage(QString filePath){
 
 }
 
+/* select Other Languges*/
+void MainWindow::selectOtherLanguges(){
+    QString filePath;
+    filePath = QFileDialog::getOpenFileName(this,"Select trained language data","~/documents","Trained data(*.traineddata)");
+     refreshLangugePath(filePath);
+    QSettings settings("xtres_languages", "otresApp");
+    settings.setValue("xt_other_lang_path",filePath);
+    qDebug() << filePath;
+}
 
+void MainWindow::refreshLangugePath(QString path){
+   otherLangPath = path;
+   if(!otherLangPath.isEmpty())
+   {
+       QStringList list = otherLangPath.split("/");
+       if( list.length() > 1)
+       {
+           QString file = list.last();
+           QString *fullpath = new QString(otherLangPath);
+           QString langDir  = fullpath->replace(file,"");
+           QString langName  = file.replace(".traineddata","",Qt::CaseInsensitive);
+           this->langDir = langDir;
+           this->langName = langName;
+           qDebug()<<"hello"<<langDir<<langName;
+       }
+
+
+   }
+
+
+}
 
 void MainWindow::showMessage(QString msg){
     ui->tipsLabel->setText(msg);
@@ -218,3 +294,19 @@ Pix* QImage2Pix(const QImage &image)
     }
     return pix;
 }
+
+void MainWindow::on_comboBox_currentIndexChanged(int index)
+{
+    if(index != langIndx)
+    {
+        langIndx = index;
+        QSettings settings("xtres_languages", "otresApp");
+        settings.setValue("xt_lang_key",langIndx);
+
+        if(index == 2){
+            selectOtherLanguges();
+        }
+    }
+
+}
+

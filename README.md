@@ -4,6 +4,7 @@ This demo contains a python project to recognize text from picture with tesserac
 이 데모에는 tesseract-OCR을 사용하여 그림에서 텍스트를 인식하는 Python 프로젝트와 Qt C++ GUI 응용 프로그램 구현이 포함되어 있습니다.<br>
 このデモには、tesseract-OCR を使用して画像からテキストを認識する Python プロジェクトと、Qt C++ GUI アプリケーションの実装が含まれています。<br>
  <img src="https://github.com/Odasoken/pyChineseOcrTest/blob/main/demo.jpg" width="50%" height="50%">
+  <img src="https://github.com/Odasoken/pyChineseOcrTest/blob/main/demo2.jpg" width="50%" height="50%">
 
 # 
 ```python
